@@ -1,0 +1,673 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(to bottom right, #ffd6eb, #fff8f0);
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  /* FIX 1: Ensures the body always fills the vertical screen space for perfect centering */
+  min-height: 100vh;
+}
+
+/* Night sky background */
+.night-sky {
+  background: radial-gradient(ellipse at bottom, #0b0c1a 0%, #000033 100%);
+  transition: background 1s ease;
+}
+
+/* --- New: Welcome Message Above Popup --- */
+.welcome-message-text {
+  position: absolute;
+  top: 35%; /* Position above the popup card */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  color: #ff66a3; 
+  font-size: 1.8rem;
+  font-weight: 600;
+  z-index: 50;
+  transition: opacity 0.5s ease;
+}
+
+.welcome-message-text.hide {
+  opacity: 0;
+}
+
+/* --- Popup --- */
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  background: rgba(255, 240, 245, 0.95);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+  z-index: 40;
+  transition: all 0.8s ease;
+  opacity: 0;
+  /* FIX 2: Added constraint for small mobile screens (Good practice) */
+  max-width: 90vw;
+}
+
+.popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.popup.hide-popup {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+/* Surprise Button */
+.surprise-btn {
+  margin-top: 1rem;
+  background: linear-gradient(45deg, #ff8ac6, #ffcce0);
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 182, 193, 0.5);
+  animation: pulse 3s infinite;
+  z-index: 40;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* --- Cake Container (Default: Desktop/PC Size) --- */
+.cake {
+  position: absolute;
+  left: 50%;
+  top: 55%; /* Adjusted for better screen placement */
+  /* Initial hidden state */
+  transform: translate(-50%, 0) scale(0.5); 
+  z-index: 30;
+
+  margin: 0;
+  transition: all 1s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Cake Container - Shown State (Desktop/PC) */
+.cake.show {
+  opacity: 1;
+  /* Final desktop size (1.05 is the bounce effect) */
+  transform: translate(-50%, 0) scale(1.05);
+  pointer-events: auto;
+}
+
+/* --- Cake Structure (Uses fixed pixels for desktop shape) --- */
+/* Plate - ENHANCED */
+.plate {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px; /* Base width */
+  height: 40px;
+  background: radial-gradient(circle at 50% 20%, #ffffff, #e0e0e0 40%, #cccccc 80%, #b0b0b0);
+  border-radius: 50%;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 -3px 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Layers - CRITICAL CHANGES FOR CYLINDRICAL LOOK AND DRIP (Desktop) */
+.layer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%/10%;
+  transform-style: preserve-3d;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Layer 1 - Red Velvet/Pink Cake */
+.layer1 {
+  bottom: 0;
+  width: 200px;
+  height: 60px;
+  background: linear-gradient(to top, #de5a5a 0%, #f46e6e 70%, #f8a8a8 95%, #fff); 
+}
+
+/* Layer 2 - Cream/Yellow Cake */
+.layer2 {
+  bottom: 55px;
+  width: 180px;
+  height: 55px;
+  background: linear-gradient(to top, #e09d3c 0%, #f7b74f 70%, #ffd699 95%, #fff);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3), 0 0 0 4px #fff, 0 0 0 5px #f7b74f; 
+}
+
+/* Layer 3 - Frosting Top Layer with Drips */
+.layer3 {
+  bottom: 100px;
+  width: 160px;
+  height: 50px;
+  background: #fdf5f9; 
+  box-shadow: inset 0 3px 5px rgba(255, 255, 255, 0.7), 
+              0 5px 10px rgba(0, 0, 0, 0.3);
+  overflow: visible; 
+}
+
+/* Add a Drip Effect using a pseudo-element */
+.layer3::after {
+  content: '';
+  position: absolute;
+  top: 90%; 
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: #ffc0d1; 
+  border-radius: 0 0 50% 50% / 0 0 100% 100%; 
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+}
+
+/* Candle setup - FIXED POSITION for better centering on top layer */
+.candles {
+  position: absolute;
+  top: -70px; /* Adjusted to sit on the top layer */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%; 
+  height: 0; 
+  z-index: 10; 
+}
+
+/* Candle design - REMAINS THE SAME */
+.candle {
+  position: absolute;
+  width: 10px;
+  height: 50px; 
+  background: linear-gradient(to bottom, #ffffff, #ffe0e0, #ffb3b3);
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4), inset 0 0 2px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255,255,255,0.8); 
+  z-index: 40; 
+}
+
+/* Candle flame */
+.flame {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 15px;
+  background: radial-gradient(circle at 50% 50%, #ffeb3b, #ff9800 60%, #f44336 80%, transparent 90%);
+  border-radius: 50%;
+  animation: flicker 0.2s infinite alternate;
+  box-shadow: 0 0 10px 3px rgba(255, 165, 0, 0.8), 0 0 15px 5px rgba(255, 69, 0, 0.5);
+}
+
+/* Flicker animation */
+@keyframes flicker {
+  0% { transform: translateX(-50%) scale(1); opacity: 1; }
+  50% { transform: translateX(-50%) scale(1.2); opacity: 0.8; }
+  100% { transform: translateX(-50%) scale(0.9); opacity: 1; }
+}
+
+/* Candle Blow Effect CSS */
+.candle.blown-out .flame {
+  opacity: 0;
+  transform: scale(0.1);
+  transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+}
+
+.candle.blown-out::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background: rgba(180, 180, 180, 0.6); 
+  border-radius: 50%;
+  animation: puffOut 1s forwards ease-out;
+}
+
+@keyframes puffOut {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -20px) scale(3); }
+}
+
+
+/* --- Birthday Text & Wishes --- */
+.birthday-text {
+  position: absolute;
+  top: 8%;
+  width: 100%;
+  text-align: center;
+  font-size: 3vw; 
+  /* max-font-size: 2.5rem; */
+  color: #ff66a3;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 1s ease;
+  z-index: 60;
+}
+
+.birthday-text.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Birthday Wishes Card (Animated Text) */
+.birthday-wishes {
+  position: absolute;
+  top: 20%; 
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 240, 245, 0.95);
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
+  z-index: 50;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  max-width: 90vw;
+  transition: opacity 1s, transform 1s; /* Added transition for smooth hide/show */
+}
+
+.birthday-wishes.show {
+  opacity: 1;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  animation: fadeInDown 1.5s forwards;
+}
+
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translate(-50%, -50px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+#birthdayWishes h2 {
+  /* Keep font-size in vw for desktop to scale with window width */
+  font-size: 3vw; 
+  color: #ff66a3;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #ff66a3;
+}
+
+@keyframes typing {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+/* Links */
+.links {
+  position: absolute;
+  bottom: 5%;
+  width: 100%;
+  text-align: center;
+  z-index: 40;
+}
+
+.link-btn {
+  margin: 0 10px;
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(45deg, #ff8ac6, #ffcce0);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
+  transition: all 0.3s;
+}
+
+.link-btn:hover {
+  transform: scale(1.05);
+}
+
+
+
+/* Fireworks (Stays here for z-index, actual animation CSS is in firework.js) */
+#fireworks-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15; /* Behind cake (30) */
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor, 0 0 15px currentColor;
+  opacity: 1;
+}
+
+.firework-shell {
+  position: absolute;
+  width: 3px;
+  height: 15px;
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 0 5px white, 0 0 10px #add8e6;
+  transform-origin: bottom center;
+}
+
+/* Stars */
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  width: 2px;
+  height: 2px;
+  opacity: 0.8;
+  box-shadow: 0 0 2px white;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.3; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.3; transform: scale(0.5); }
+}
+
+/* Back Button */
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  padding: 6px 12px; 
+  font-size: 0.9em; 
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  display: none;
+  transition: background 0.3s ease;
+  z-index: 9999;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.back-btn.show {
+  display: block !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Night sky background */
+.night-bg {
+  background: radial-gradient(circle at top, #0b1a3d 0%, #000814 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Heart Animation Cursor Effect */
+.heart {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #ff66a3; 
+  transform: rotate(-45deg);
+  pointer-events: none; 
+  z-index: 10000;
+  animation: floatUp 1.5s ease-out forwards;
+}
+
+/* Create the heart shape using pseudo-elements */
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #ff66a3;
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -7.5px;
+  left: 0;
+}
+
+.heart::after {
+  top: 0;
+  left: 7.5px;
+}
+
+/* Animation for floating up and fading out */
+@keyframes floatUp {
+  0% { opacity: 1; transform: translate(0, 0) rotate(-45deg) scale(1); }
+  100% { opacity: 0; transform: translate(0, -50px) rotate(-45deg) scale(0.5); }
+}
+
+/* Balloon Animation */
+#balloon-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  z-index: 20; 
+}
+
+.balloon {
+  position: absolute;
+  bottom: -100px; 
+  width: 60px;
+  height: 70px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.2);
+  transform-origin: bottom;
+  animation: floatUpBalloon 12s linear forwards, sway 5s ease-in-out infinite alternate;
+}
+
+/* Balloon String (Pseudo-element) */
+.balloon::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 80px; 
+  background: #333;
+}
+
+/* Balloon Knot */
+.balloon::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: inherit; 
+}
+
+/* Upward Floating Animation */
+@keyframes floatUpBalloon {
+  0% { bottom: -100px; opacity: 0.8; }
+  100% { bottom: 100vh; opacity: 0; }
+}
+
+/* Horizontal Sway Animation */
+@keyframes sway {
+  0% { transform: translateX(0) rotate(-2deg); }
+  100% { transform: translateX(20px) rotate(2deg); }
+}
+
+/* ========================================================================= */
+/* --- UPDATED RESPONSIVE SECTION (Mobile/Tablet View for 768px and smaller) --- */
+/* ========================================================================= */
+@media (max-width: 768px) {
+  
+  /* New Welcome Message Position for Mobile */
+  .welcome-message-text {
+    top: 30%; 
+    font-size: 1.5rem; /* Slightly larger than the old 1.2rem for tablets */
+  }
+
+  /* General text adjustments */
+  .birthday-text {
+    font-size: 2rem; /* Use rem/px instead of vw for mobile text for consistency */
+    top: 5%; 
+  }
+
+  .popup {
+    padding: 1.5rem; 
+    width: 80%; /* Ensure it's not too wide on tablets */
+  }
+
+  .popup h2 {
+    font-size: 1.6rem;
+  }
+  
+  .surprise-btn {
+    padding: 0.8rem 1.6rem;
+    font-size: 1rem;
+  }
+
+  /* Animated Wishes Card Position for Mobile */
+  .birthday-wishes {
+    top: 10%; 
+    padding: 1.5rem 1rem;
+    width: 90%; /* Fixed width for responsive card */
+  }
+
+  #birthdayWishes h2 {
+    font-size: 1.2rem; /* Reduced font size for mobile text fitting */
+    /* Adjusted steps for smooth mobile typing animation */
+    animation: typing 3.5s steps(40) 1 forwards; 
+  }
+
+  /* --- CAKE ADJUSTMENTS FOR MOBILE --- */
+  .cake {
+    /* Set a controlled, predictable size for the overall cake on mobile */
+    /* Adjusted the top position to sit lower on small screens */
+    top: 60%; 
+    width: 200px; /* Reduced overall size */
+    height: 120px; 
+  }
+  
+  /* Plate scaling */
+  .plate {
+    width: 220px; 
+    height: 30px; 
+    bottom: -15px; 
+  }
+
+  /* Layer scaling (maintaining proportions) */
+  .layer1 {
+    width: 170px; 
+    height: 45px; 
+  }
+  
+  .layer2 {
+    width: 150px; 
+    height: 40px; 
+    bottom: 40px; /* Adjusted layer position */
+  }
+  
+  .layer3 {
+    width: 130px; 
+    height: 35px;
+    bottom: 75px; 
+  }
+  
+  .layer3::after {
+    height: 10px;
+  }
+  
+  /* Candles Adjustment for Mobile */
+  .candles {
+    top: -40px; /* Adjusted to sit on the new top layer */
+  }
+  
+  .candle {
+    width: 8px; /* Slightly thinner candle */
+    height: 40px;
+  }
+
+  /* Links at the bottom - STACKED FOR MOBILE UX */
+  .links {
+    bottom: 2%; 
+    /* Force links to stack vertically and center */
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+  }
+
+  .link-btn {
+    /* Make buttons full-width in the container for easy tapping */
+    width: 70%; 
+    margin: 5px 0; /* Vertical spacing */
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+
+  /* Back button adjustments */
+  .back-btn {
+    padding: 6px 10px; 
+    font-size: 0.8em; 
+    top: 10px; 
+    left: 10px; 
+  }
+}
+
+/* ================================================================= */
+/* --- ADDED: Extra Small Mobile Optimization (480px and smaller) --- */
+/* ================================================================= */
+@media (max-width: 480px) {
+  
+  .welcome-message-text {
+    top: 25%;
+    font-size: 1.2rem;
+  }
+
+  /* Shrink main elements slightly more */
+  .cake {
+    top: 65%;
+    width: 180px; 
+    height: 110px;
+  }
+  
+  .plate {
+    width: 200px; 
+  }
+  
+  .links {
+    bottom: 1%;
+  }
+
+  .link-btn {
+    width: 80%;
+  }
+}

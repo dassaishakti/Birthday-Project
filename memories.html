@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Memories 📸</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #ffd6eb, #fff8f0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff66a3;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 240, 245, 0.95);
+      border-radius: 20px;
+      padding: 2rem 3rem;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .memories-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .memory {
+      background: linear-gradient(45deg, #ff8ac6, #ffcce0);
+      padding: 1rem;
+      border-radius: 15px;
+      color: white;
+      box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .memory:hover {
+      transform: scale(1.05);
+    }
+
+    .link-btn {
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      background: linear-gradient(45deg, #ff8ac6, #ffcce0);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
+      transition: transform 0.3s;
+    }
+
+    .link-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Popup card */
+    .popup-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 240, 245, 0.95);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      z-index: 100;
+      display: none; /* hidden by default */
+    }
+
+    .popup-card img {
+      max-width: 100%;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+    }
+
+    .popup-card .close-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1.2rem;
+      background: linear-gradient(45deg, #ff8ac6, #ffcce0);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 2rem; }
+      .card { padding: 1.5rem; }
+      .memory { font-size: 0.9rem; }
+      .popup-card { padding: 1.5rem; }
+    }
+    /* Media query for smaller mobile devices */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+  .card {
+    /* Slightly more padding on mobile to make buttons bigger */
+    padding: 1.5rem 2rem; 
+  }
+  .likes-list li, .memory {
+    /* Ensure tappable area is large enough */
+    font-size: 1rem;
+    padding: 12px; 
+  }
+}
+  </style>
+</head>
+<body>
+  <h1>Our Sweet Memories</h1>
+  <div class="card">
+    <div class="memories-grid">
+      <div class="memory" data-type="text" data-message="🥰 One day, I met a girl I played with every day, and now she’s not just a teammate in the game, but my best buddy who makes every moment fun and special.">
+        First Game Play Together
+      </div>
+
+      <div class="memory" data-type="image" data-message=".">
+        Dynamic Duo
+      </div>
+
+      <div class="memory" data-type="text" data-message="🎮 I hold all the sweetest and cutest memories with her from our time in the game.">
+        Fun Gaming Time
+      </div>
+    </div>
+    <a href="index.html" class="link-btn">Back to Surprise 🎉</a>
+  </div>
+
+  <!-- Popup Card -->
+  <div class="popup-card" id="popupCard">
+    <div id="popupContent"></div>
+    <button class="close-btn" id="closePopup">Close</button>
+  </div>
+
+  <script>
+    const memories = document.querySelectorAll('.memory');
+    const popupCard = document.getElementById('popupCard');
+    const popupContent = document.getElementById('popupContent');
+    const closeBtn = document.getElementById('closePopup');
+
+    memories.forEach(memory => {
+      memory.addEventListener('click', () => {
+        const type = memory.getAttribute('data-type');
+        if (type === 'text') {
+          popupContent.innerHTML = `<p>${memory.getAttribute('data-message')}</p>`;
+        } else if (type === 'image') {
+          const imgSrc = memory.getAttribute('data-image');
+          popupContent.innerHTML = `<img src="${imgSrc}" alt="Dynamic Duo Image">`;
+        }
+        popupCard.style.display = 'block';
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      popupCard.style.display = 'none';
+    });
+
+    // Optional: close when clicking outside
+    window.addEventListener('click', e => {
+      if (e.target === popupCard) popupCard.style.display = 'none';
+    });
+    
+  </script>
+  <script src="./js/cursor.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday 🎂</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/snow.css" />
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Popup -->
+    <div id="popup" class="popup">
+      <div class="popup-content">
+        <h2>💖 Welcome 💞</h2>
+        <p>Happy Birthday cutie 🥰 ✨</p>
+        <button id="surpriseBtn" class="surprise-btn">🎁 A Surprise for You</button>
+      </div>
+    </div>
+
+    <!-- Wishes Text Animation -->
+    <div id="birthdayWishes" class="birthday">
+      <h2 id="wishesText">🎉 Happy Birthday, Cutie! 🥰💖✨</h2>
+    </div>
+
+    <!-- Cake -->
+    <div id="cake" class="cake">
+      <div class="plate"></div>
+      <div class="layer layer1"></div>
+      <div class="layer layer2"></div>
+      <div class="layer layer3"></div>
+      <div class="candles"></div>
+    </div>
+
+
+    <!-- Main Text -->
+    <h4 id="birthdayText" class="birthday-text">🎉 Happy Birthday! 🎉
+      Wishing the sweetest and cutest girl a day full of smiles, laughter, and chocolate! 💖
+    </h4>
+
+    <!---Ballon container-->
+    <div id="balloon-container"></div>
+
+    <!-- <div id="fireworks-container"></div> -->
+
+    <!-- Fireworks Container -->
+    <div id="fireworks-container"></div>
+
+    <!-- Night Sky Canvas -->
+    <canvas id="snowCanvas"></canvas>
+
+    <!-- Links to Other Pages -->
+    <div class="links">
+      <a href="likes.html" target="_blank" class="link-btn">Likes ❤️</a>
+      <a href="memories.html" target="_blank" class="link-btn">Our Memories 📸</a>
+    </div>
+
+    <!-- Back Button (Hidden until surprise) -->
+    <button id="backBtn" class="back-btn hidden">⬅ Back to Main Page</button>
+
+  </div>
+  <script src="./js/snow.js" defer></script>
+  <script src="./js/firework.js" defer></script>
+  <script src="./js/script.js" defer></script>
+</body>
+
+</html>
